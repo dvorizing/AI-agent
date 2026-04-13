@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>בנק ישראל - סוכן רכישות</title>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏦 סוכן רכישות בנק ישראל</h1>
+            <p>חפש הצעות מחיר ושלח למייל</p>
+        </header>
+
+        <div class="chat-box">
+            <div id="messages" class="messages">
+                <div class="message bot">
+                    <p>שלום! 👋 אני סוכן הרכישות של בנק ישראל.</p>
+                    <p>כיצד אוכל לעזור?</p>
+                    <p><strong>דוגמות:</strong></p>
+                    <p><em>"חפש שרשרת יהלום DVORIZING@GMAIL.COM"</em> → יחפש בלי לשלוח</p>
+                    <p><em>"תחפש שרשרת יהלום ותשלח ל- DVORIZING@GMAIL.COM"</em> → יחפש ויישלח מייל</p>
+                    <p><em>"search Lenovo laptop and email me@example.com"</em> → יחפש ויישלח</p>
+                </div>
+            </div>
+
+            <div class="input-area">
+                <input 
+                    type="text" 
+                    id="userInput" 
+                    placeholder="הקלד את בקשת הרכישה שלך..."
+                    autocomplete="off"
+                >
+                <button id="sendBtn" onclick="sendMessage()">שלח 📤</button>
+            </div>
+        </div>
+
+        <div id="loading" class="loading" style="display: none;">
+            <p>⏳ מעבדת את הבקשה...</p>
+        </div>
+    </div>
+
+    <script src="/static/script.js"></script>
+</body>
+</html>
