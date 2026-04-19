@@ -3,86 +3,75 @@ function sendMessage() {
     const messagesDiv = document.getElementById('messages');
     const loadingDiv = document.getElementById('loading');
     const sendBtn = document.getElementById('sendBtn');
-    
+
     const prompt = userInput.value.trim();
-    
     if (!prompt) {
-        alert('אנא הקלד בקשה');
+        alert('אנא הקלד שם מוצר וכתובת מייל');
         return;
     }
-    
-    const userMessage = document.createElement('div');
-    userMessage.className = 'message user';
-    userMessage.innerHTML = `<p>${escapeHtml(prompt)}</p>`;
-    messagesDiv.appendChild(userMessage);
-    
+
+    // Show user message
+    const userMsg = document.createElement('div');
+    userMsg.className = 'message user';
+    userMsg.innerHTML = `<p>${escapeHtml(prompt)}</p>`;
+    messagesDiv.appendChild(userMsg);
+
     userInput.value = '';
     userInput.focus();
-    
     messagesDiv.scrollTop = messagesDiv.scrollHeight;
-    
+
     loadingDiv.style.display = 'block';
     sendBtn.disabled = true;
-    
+
     fetch('/api/search', {
         method: 'POST',
-        headers: {
-            'Content-Type': 'application/json'
-        },
+        headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({ prompt: prompt })
     })
-    .then(response => response.json())
+    .then(res => res.json())
     .then(data => {
         loadingDiv.style.display = 'none';
         sendBtn.disabled = false;
-        
+
+        const botMsg = document.createElement('div');
+        botMsg.className = 'message bot';
+
         if (data.error) {
-            const errorMessage = document.createElement('div');
-            errorMessage.className = 'message bot';
-            errorMessage.innerHTML = `<p>❌ שגיאה: ${escapeHtml(data.error)}</p>`;
-            messagesDiv.appendChild(errorMessage);
+            botMsg.innerHTML = `<p>❌ שגיאה: ${escapeHtml(data.error)}</p>`;
         } else {
-            const botMessage = document.createElement('div');
-            botMessage.className = 'message bot';
-            botMessage.innerHTML = `
-                <p><strong>✅ בדיקה הושלמה!</strong></p>
-                <p>📦 <strong>מוצר:</strong> ${escapeHtml(data.product)}</p>
-                <p>📧 <strong>מייל:</strong> ${escapeHtml(data.email)}</p>
+            botMsg.innerHTML = `
+                <p><strong>✅ הסוכן סיים!</strong></p>
+                <hr style="border:none;border-top:1px solid #ccc;margin:8px 0">
                 <p><strong>📋 תוצאות:</strong></p>
-                <p>${escapeHtml(data.results).replace(/\n/g, '<br>')}</p>
-                <p style="margin-top: 10px; font-size: 12px; opacity: 0.8;">${escapeHtml(data.email_status)}</p>
+                <pre style="white-space:pre-wrap;font-size:13px;">${escapeHtml(data.results)}</pre>
             `;
-            messagesDiv.appendChild(botMessage);
         }
-        
+
+        messagesDiv.appendChild(botMsg);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     })
-    .catch(error => {
+    .catch(err => {
         loadingDiv.style.display = 'none';
         sendBtn.disabled = false;
-        
-        const errorMessage = document.createElement('div');
-        errorMessage.className = 'message bot';
-        errorMessage.innerHTML = `<p>❌ שגיאה בחיבור: ${escapeHtml(error.toString())}</p>`;
-        messagesDiv.appendChild(errorMessage);
-        
+
+        const errMsg = document.createElement('div');
+        errMsg.className = 'message bot';
+        errMsg.innerHTML = `<p>❌ שגיאת חיבור: ${escapeHtml(err.toString())}</p>`;
+        messagesDiv.appendChild(errMsg);
         messagesDiv.scrollTop = messagesDiv.scrollHeight;
     });
 }
 
 function escapeHtml(unsafe) {
-    return unsafe
-        .replace(/&/g, "&amp;")
-        .replace(/</g, "&lt;")
-        .replace(/>/g, "&gt;")
-        .replace(/"/g, "&quot;")
-        .replace(/'/g, "&#039;");
+    return String(unsafe)
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#039;');
 }
 
 document.getElementById('userInput').addEventListener('keypress', function(e) {
-    if (e.key === 'Enter') {
-        sendMessage();
-    }
+    if (e.key === 'Enter') sendMessage();
 });
 
-document.getElementById('sendBtn').addEventListener('click', sendMessage);

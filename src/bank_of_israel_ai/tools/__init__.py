@@ -1,10 +1,10 @@
-"""Tools used by the BankOfIsrael AI agents."""
+"""Tools used by the AI procurement agent."""
 
-from .email_tool import send_email, EmailSettings
-from .search_tool import search_web
+from .search_tool import search_product
+from .email_tool import send_email
 
 __all__ = [
+    "search_product",
     "send_email",
-    "EmailSettings",
-    "search_web",
 ]
+

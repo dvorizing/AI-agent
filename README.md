@@ -1,53 +1,53 @@
-# BankOfIsrael AI
+# AI Procurement Agent – Bank of Israel
 
-פרויקט פייתון למימוש רעיונות AI עבור בנק ישראל.
+סוכן רכש חכם: מחפש מוצרים באינטרנט, בוחר 3 הצעות מחיר, ושולח מייל.
 
-## מבנה בסיסי
+## מבנה
 
-- `src/` - קוד המקור של החבילה
-- `tests/` - בדיקות יחידה
-- `pyproject.toml` - קונפיגורציה של הפרויקט
+```
+src/bank_of_israel_ai/
+  agents/procurement_agent.py   # CrewAI agent (Gemini LLM)
+  tools/search_tool.py          # חיפוש Google (Serper API)
+  tools/email_tool.py           # שליחת מייל (SendGrid)
+  web_server.py                 # Flask web server
+  templates/index.html          # ממשק צ'אט בעברית
+  tests/test_llm_connection.py  # בדיקת חיבור ל-LLM
+  tests/test_email_sending.py   # בדיקת שליחת מייל
+```
 
-## התחלה
-
-1. התקן תלותים:
+## התקנה
 
 ```bash
 venv313\Scripts\python.exe -m pip install -r requirements.txt
 ```
 
-> **חשוב:** הפרויקט משתמש ב-Python 3.13 (מותקן אוטומטית). ה-venv נקרא `venv313`.
+## הגדרת .env
 
-2. הרץ בדיקות:
-
-```bash
-venv313\Scripts\python.exe -m pytest
+```
+GOOGLE_AI_API_KEY=your-key
+SERPER_API_KEY=your-key
+SENDGRID_API_KEY=your-key
+EMAIL_FROM=sender@example.com
+EMAIL_TO=default-recipient@example.com
 ```
 
-## הרצת סוכן הרכש (Procurement Agent) עם CREWAI
-
-1. התקן תלותים נוספות (כולל SendGrid):
+## בדיקות
 
 ```bash
-venv313\Scripts\python.exe -m pip install -r requirements.txt
+# בדיקת חיבור ל-LLM
+venv313\Scripts\python.exe src/bank_of_israel_ai/tests/test_llm_connection.py
+
+# בדיקת שליחת מייל
+venv313\Scripts\python.exe src/bank_of_israel_ai/tests/test_email_sending.py
 ```
 
-2. העתק את הקובץ `.env.example` ל־`.env` ומלא בו את ההגדרות (SendGrid API Key, OpenAI API Key, Serper API Key).
-
-3. הרץ את הסוכן עם שאלה (בקשת רכש):
+## הפעלה
 
 ```bash
-venv313\Scripts\python.exe -m bank_of_israel_ai --query "בקשת מחיר למדפסת לייזר"
+venv313\Scripts\python.exe -m bank_of_israel_ai
 ```
 
-4. אם תרצה רק להדפיס את התוצאות מבלי לשלוח מייל:
+פתח בדפדפן: http://127.0.0.1:5000
 
-```bash
-venv313\Scripts\python.exe -m bank_of_israel_ai --query "בקשת מחיר" --no-email
-```
-
-5. לשליחת מייל ללא אישור ידני (דילוג על HITL prompt):
-
-```bash
-venv313\Scripts\python.exe -m bank_of_israel_ai --query "בקשת מחיר" --no-confirm
-```
+הקלד שם מוצר + כתובת מייל, לדוגמה:
+> מחשב נייד Dell ושלח ל-user@example.com
